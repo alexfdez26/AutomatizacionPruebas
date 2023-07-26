@@ -1,0 +1,243 @@
+adl notas
+apimanager
+https://apicmanager-qa.appsptqa.ath.com.co/manager/org-qa/
+User: carolina.gantiva
+Pass: Caro102938475-
+Enrollment-Customer
+smc -start
+$Egur1d4d@DL
+
+alexfdez -> ocra 
+alexfdezfuentes -> anu 
+aafernandez43@misena.edu.co -> eni 
+
+SePtIeMbRe1993*
+
+usuario: dario.narvaez
+
+6026606446
+reclamaciones@correvalle.com
+
+URL: https://analytica.ops.ath.com.co
+Password: Ath123.
+User: cgantiva
+
+
+09:29
+contraseña: Alex2022.
+
+nFNbNbh*1
+PxBuxdU*1
+
+
+VPN CONNECT 
+Clave: aCG6p3N5B4J?TtA/kREl$YGjbBsH"65#
+
+https://aval-aws.awsapps.com/start/#/
+
+https://adl-sc-stg.auth.us-east-2.amazoncognito.com/oauth2/token
+4p1i77954jnnpeb4d4adsenl6c
+
+DEV	gP%LQX*3Pf3JEDEV*#YXe5dnUrS
+STG	gP%LQX*3Pf3JESTG*#YXe5dnUrS
+apicapi-gateway-qa.appsptqa.ath.com.co
+PROD gP%LQX*3Pf3JEPRO*#YXe5dnUrS
+
+URL Certificado: apicapi-gateway-qa.appsptqa.ath.com.co
+URL Cerfificado PROD apicapi-bbogmb.apps.ath.com.co
+
+
+
+T1 - > Resumen de Productos
+T2 - > Saldo Detallado
+T3 - > Consulta de Movimientos
+T4 - > Extractos
+
+SELECT RQUID, MESSAGE_DATE, SERVICE_NAME, OPERATION_NAME, MESSAGE, BANKID, HOST_CODE, DESC_HOST_CODE, IFX_CODE, REF1, REF2, REF3 , PROVIDER
+FROM ORA12IIB10.message_log 
+WHERE RQUID='1628699346'
+order by MESSAGE_DATE desc;
+
+SELECT *
+FROM ORA12IIB10.MESSAGE_LOG
+WHERE 1=1
+AND MESSAGE_DATE BETWEEN TO_DATE ('19/08/2021 10:51:00', 'DD/MM/YYYY HH24:MI:SS')
+AND TO_DATE ('19/08/2021 10:54:00', 'DD/MM/YYYY HH24:MI:SS')
+--AND RQUID='1629388343'
+AND (REF1 = '1019020561' OR REF2 = '1019020561' OR REF3 = '1019020561')
+--AND OPERATION_NAME = 'PRs_validateDepAuth'
+ORDER BY MESSAGE_DATE DESC;
+
+77704832
+
+TOKEN PRE REQUEST
+
+var bank = 'occ'
+var catalog = 'api-mb' 
+var api_catalog = {
+  'api-pb': 'https://apicapi-gateway-qa.appsptqa.ath.com.co/org-qa/api-pb',
+  'api-mb': 'https://apicapi-gateway-qa.appsptqa.ath.com.co/org-qa/api-mb'
+}
+var api_client = {
+  'bog': {
+    'api-pb': {
+      'client_id': '9a76b4b5c7a9d2abe96f12d137aca8c4',
+      'client_secret': '3ad097242e6cb969c7bb093c9edeba90'
+    },
+    'api-mb':{
+      'client_id': 'e07d3961b6d9750bbd97203919fc0bdf',
+      'client_secret': 'd1367b91fcfff82a33e23ac92816fbea'
+    }
+  },
+  'avv': {
+    'api-pb': {
+      'client_id': '69638ff4454db197d414f0cae4fd3876',
+      'client_secret': '52739dd68927e11c0c39c3c5f58e19ef'
+    },
+    'api-mb':{
+      'client_id': '3b736a974dfd7c043fbbcd1868d1a8c3',
+      'client_secret': 'a9fbc5ece94cbba03fc5fc8ffd971ab9'
+    }
+  },
+  'occ': {
+    'api-pb': {
+      'client_id': '37f79b18c62e56bd99d557a27e6d2805',
+      'client_secret': 'ffc80c474ffc35543f6cb012ffc5f12c'
+    },
+    'api-mb':{
+      'client_id': '59a5cc4131771dc3014964371a84a4eb',
+      'client_secret': 'b06efdb0edb0f0541a6d082b2f1af4e7'
+    }
+  },
+  'pop': {
+    'api-pb': {
+      'client_id': '5b4fb1f1200de0a8734700f8af45b703',
+      'client_secret': '596359495816971e4405bf022ec0a274'
+    },
+    'api-mb':{
+      'client_id': '38500a9c02fb58ba519e2116d0d1aa50',
+      'client_secret': '18d1a1813b478b4edbf688e5df688288'
+    }
+  }
+}
+var client_id = api_client[bank][catalog]['client_id']
+var client_secret = api_client[bank][catalog]['client_secret']
+var host = api_catalog[catalog]
+pm.globals.set("host", host);
+pm.sendRequest({
+      url:  host + '/v1/Authentication/oauth2/token', 
+      method: 'POST',
+      header: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: {
+          mode: 'raw',
+          raw: 'grant_type=client_credentials&client_id=' + client_id + '&client_secret=' + client_secret + '&scope=scope1'
+      }
+  }, function (err, res) {
+        pm.globals.set("access_token", res.json().access_token);
+        pm.globals.set("token_type", res.json().token_type);
+        pm.globals.set("client_id", client_id);
+  });
+var Header = require('postman-collection').Header;
+pm.request.headers.append(Header.create(pm.globals.get('client_id'), "X-IBM-Client-Id"))
+pm.request.headers.append(Header.create(pm.globals.get('token_type') + " " + pm.globals.get('access_token'), "Authorization"))
+printHeaders(pm.request.headers);
+function printHeaders(headers) { // print out headers to the console
+    console.log('-------pm.request.headers-------')
+    headers.each(function(header) {
+       console.log(header.key + ': ' + header.value);
+    });
+}
+
+
+
+Buen dia Señores,
+Solicito de su colaboración validando los hallazgos identificados dentro de las pruebas de la epica SC - 3112 API - Saldo Detallado de productos BOCC - REST , estos se encuentran en la siguiente ruta:https://docs.google.com/document/d/1rTaPIvOjM92E9V1NMHqPwibWZzWXKuNhh9fAj3BjVNI/edit?usp=sharing
+
+
+Buen día, 
+
+Se devuelve la historia a hasta dar solución a los hallazgos reportados en la sub tarea https://avaldigitallabs.atlassian.net/browse/ASC-5910
+
+Buen día,
+Se bloquea la historia hasta dar solucion a la dependencia reportada en la subtarea https://avaldigitallabs.atlassian.net/browse/ASC-5837
+
+Buen día,
+
+Se emite certificación de la historia https://avaldigitallabs.atlassian.net/wiki/spaces/DA/pages/1986956208, el documento de certificación se encuentra en la siguiente ruta en confluence https://avaldigitallabs.atlassian.net/wiki/spaces/DA/pages/1986956208/Administraci+n+de+participante+en+MDM+BOCC+V1+-EKS
+
+Versión Certificada: 1.0.4
+
+Cambio realizado:
+
+- Se agrega evidencia del ajuste a la cobertura en sonar superior al 90%. en la misma version ya certificada por QA (1.0.4)
+
+Estrategia de la ejecución de las pruebas:
+
+Pruebas estatica manual del api en la herramienta sonas evidenciando la correcta cobertura.
+
+Observaciones durante la ejecución de las pruebas:
+
+- Ninguna
+
+Interesados:
+
+
+
+QA Analyst bajo metodología ágil (Scrum), en célula ADL, participante en actividades de refinamiento de historias de usuario, estimación de pruebas, planing, reunión de 3 amigos, sprint review y retrospectiva, diseño de casos de prueba bajo metodología BDD, ejecución de pruebas, envío de informe de pruebas.
+
+Herramientas utilizadas como postman, soap, sql , jira, confluence, TestRailQA Analyst bajo metodología ágil (Scrum), en célula ADL, participante en actividades de refinamiento de historias de usuario, estimación de pruebas, planing, reunión de 3 amigos, sprint review y retrospectiva, diseño de casos de prueba bajo metodología BDD, ejecución de pruebas, envío de informe de pruebas. Herramientas utilizadas como postman, soap, sql , jira, confluence, TestRail
+Aptitudes: BDD · Postman · Apis · Scrum · JIRA · Testrail · SQL · DynamoDB · AWS Lambda
+
+
+
+Banco de Bogotá: @Juan Pablo Espitia - @Jorge Eduardo Castillo Vargas
+Banco Popular: @Patricia Cano Acevedo
+Banco de Occidente: @William Mendoza
+Banco AvVillas: @Alejandra Oliveros - @William Ramirez
+
+
+Logros: Configurar los escenarios de pruebas en la herramienta TestRail, crear las colleccions (request) en postman a partir de la documentación técnica del desarrollador. Configurar el ambiente de pruebas en postman.
+
+Nombre del cluster: adl-stg-eks
+Namespace/workload: adl-sc-stg
+Nombre del POD: adl-sc-stg-jaeger-fd49df45b-vj4sl
+
+
+
+# BAVV
+# API
+# MB
+# *RqUID:* 
+1668536802
+# *Postman:*
+# *Comando curl:*
+```
+curl --location --request POST 'https://apicapi-gateway-qa.appsptqa.ath.com.co/org-qa/api-mb/securityManagement/v1/Administration_ElectronicSignature_BAVV/Notifications' \
+--header 'X-RqUID: 1668538981' \
+--header 'X-Channel: MB' \
+--header 'X-ClientDt: 2022-10-28T10:58:21' \
+--header 'X-IPAddr: 179.1.89.18' \
+--header 'X-GovIssueIdentType: CC' \
+--header 'X-IdentSerialNum: 1020795694' \
+--header 'X-CompanyId: 0052' \
+--header 'X-LegalName: 1_1020795694' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "RefInfo": {
+    "RefId": "Q",
+    "RefType": "02"
+  }
+}'
+```
+
+18.118.123.167 apicapi-gateway-qa.appsptqa.ath.com.co
+18.118.123.167 apicmanager-qa.appsptqa.ath.com.co
+
+sudo nano /etc/hosts
+
+ctrl + o
+ctrl + x
+
